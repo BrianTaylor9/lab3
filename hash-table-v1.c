@@ -34,8 +34,8 @@ struct hash_table_v1 *hash_table_v1_create()
 		SLIST_INIT(&entry->list_head);
 	}
 	if (pthread_mutex_init(&mut, NULL) != 0) {
-	return errno;
-}
+		return errno;
+	}
 	return hash_table;
 }
 
