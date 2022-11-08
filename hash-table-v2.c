@@ -15,9 +15,6 @@ struct list_entry {
 SLIST_HEAD(list_head, list_entry);
 
 pthread_mutex_t mut;
-if (pthread_mutex_init(&mut, NULL) != 0) {
-	return errno;
-}
 
 struct hash_table_entry {
 	struct list_head list_head;
@@ -35,6 +32,9 @@ struct hash_table_v2 *hash_table_v2_create()
 		struct hash_table_entry *entry = &hash_table->entries[i];
 		SLIST_INIT(&entry->list_head);
 	}
+	if (pthread_mutex_init(&mut, NULL) != 0) {
+	return errno;
+}
 	return hash_table;
 }
 
@@ -116,6 +116,6 @@ void hash_table_v2_destroy(struct hash_table_v2 *hash_table)
 			free(list_entry);
 		}
 	}
-	free(hash_table);
 	pthread_mutex_destroy(&mut);
+	free(hash_table);
 }
