@@ -125,13 +125,14 @@ void hash_table_v2_destroy(struct hash_table_v2 *hash_table)
 		struct hash_table_entry *entry = &hash_table->entries[i];
 		struct list_head *list_head = &entry->list_head;
 		struct list_entry *list_entry = NULL;
+		pthread_mutex_destroy(&(entry->mut));
 		while (!SLIST_EMPTY(list_head)) {
 			list_entry = SLIST_FIRST(list_head);
 			SLIST_REMOVE_HEAD(list_head, pointers);
 			// pthread_mutex_destroy(&(list_entry->mut));
 			free(list_entry);
 		}
-		pthread_mutex_destroy(&(entry->mut));
+		
 
 	}
 	free(hash_table);
