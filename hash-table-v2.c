@@ -17,13 +17,13 @@ struct hash_table_entry {
 	struct list_head list_head;
 };
 
-struct hash_table_v1 {
+struct hash_table_v2 {
 	struct hash_table_entry entries[HASH_TABLE_CAPACITY];
 };
 
-struct hash_table_v1 *hash_table_v1_create()
+struct hash_table_v2 *hash_table_v2_create()
 {
-	struct hash_table_v1 *hash_table = calloc(1, sizeof(struct hash_table_v1));
+	struct hash_table_v2 *hash_table = calloc(1, sizeof(struct hash_table_v2));
 	assert(hash_table != NULL);
 	for (size_t i = 0; i < HASH_TABLE_CAPACITY; ++i) {
 		struct hash_table_entry *entry = &hash_table->entries[i];
@@ -32,7 +32,7 @@ struct hash_table_v1 *hash_table_v1_create()
 	return hash_table;
 }
 
-static struct hash_table_entry *get_hash_table_entry(struct hash_table_v1 *hash_table,
+static struct hash_table_entry *get_hash_table_entry(struct hash_table_v2 *hash_table,
                                                      const char *key)
 {
 	assert(key != NULL);
@@ -41,7 +41,7 @@ static struct hash_table_entry *get_hash_table_entry(struct hash_table_v1 *hash_
 	return entry;
 }
 
-static struct list_entry *get_list_entry(struct hash_table_v1 *hash_table,
+static struct list_entry *get_list_entry(struct hash_table_v2 *hash_table,
                                          const char *key,
                                          struct list_head *list_head)
 {
@@ -57,7 +57,7 @@ static struct list_entry *get_list_entry(struct hash_table_v1 *hash_table,
 	return NULL;
 }
 
-bool hash_table_v1_contains(struct hash_table_v1 *hash_table,
+bool hash_table_v2_contains(struct hash_table_v2 *hash_table,
                             const char *key)
 {
 	struct hash_table_entry *hash_table_entry = get_hash_table_entry(hash_table, key);
@@ -66,7 +66,7 @@ bool hash_table_v1_contains(struct hash_table_v1 *hash_table,
 	return list_entry != NULL;
 }
 
-void hash_table_v1_add_entry(struct hash_table_v1 *hash_table,
+void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
                              const char *key,
                              uint32_t value)
 {
@@ -86,7 +86,7 @@ void hash_table_v1_add_entry(struct hash_table_v1 *hash_table,
 	SLIST_INSERT_HEAD(list_head, list_entry, pointers);
 }
 
-uint32_t hash_table_v1_get_value(struct hash_table_v1 *hash_table,
+uint32_t hash_table_v2_get_value(struct hash_table_v2 *hash_table,
                                  const char *key)
 {
 	struct hash_table_entry *hash_table_entry = get_hash_table_entry(hash_table, key);
@@ -96,7 +96,7 @@ uint32_t hash_table_v1_get_value(struct hash_table_v1 *hash_table,
 	return list_entry->value;
 }
 
-void hash_table_v1_destroy(struct hash_table_v1 *hash_table)
+void hash_table_v2_destroy(struct hash_table_v2 *hash_table)
 {
 	for (size_t i = 0; i < HASH_TABLE_CAPACITY; ++i) {
 		struct hash_table_entry *entry = &hash_table->entries[i];
