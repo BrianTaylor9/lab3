@@ -32,7 +32,7 @@ struct hash_table_v2 *hash_table_v2_create()
 		struct hash_table_entry *entry = &hash_table->entries[i];
 		SLIST_INIT(&entry->list_head);
 
-		if (pthread_mutex_init(&(entry->mut), NULL) != 0) {
+		if (pthread_mutex_init(&entry->mut, NULL) != 0) {
 			return errno;
 		}
 	}
@@ -80,7 +80,7 @@ void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
 	struct hash_table_entry *hash_table_entry = get_hash_table_entry(hash_table, key);
 	
 	if (hash_table_entry != NULL) {
-		pthread_mutex_lock(&(hash_table_entry->mut));
+		pthread_mutex_lock(&hash_table_entry->mut);
 	}
 
 	struct list_head *list_head = &hash_table_entry->list_head;
@@ -96,7 +96,7 @@ void hash_table_v2_add_entry(struct hash_table_v2 *hash_table,
 	SLIST_INSERT_HEAD(list_head, list_entry, pointers);
 
 	if (hash_table_entry != NULL) {
-		pthread_mutex_unlock(&(hash_table_entry->mut));
+		pthread_mutex_unlock(&hash_table_entry->mut);
 	}
 
 }
