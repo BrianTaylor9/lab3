@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/queue.h>
+#include <pthread.h>
+#include <errno.h>
 
 struct list_entry {
 	const char *key;
@@ -15,6 +17,7 @@ SLIST_HEAD(list_head, list_entry);
 
 struct hash_table_entry {
 	struct list_head list_head;
+	pthread_mutex_t lock;
 };
 
 struct hash_table_v2 {
@@ -28,6 +31,9 @@ struct hash_table_v2 *hash_table_v2_create()
 	for (size_t i = 0; i < HASH_TABLE_CAPACITY; ++i) {
 		struct hash_table_entry *entry = &hash_table->entries[i];
 		SLIST_INIT(&entry->list_head);
+		if (pthread_mutex_init(&entry->lock, NULL) != 0) {
+			return errno;
+		}
 	}
 	return hash_table;
 }
